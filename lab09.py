@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from rotation import rotation
 from bucky import bucky
 
-def plot_cube(vertices, edges, title="Cube", figsize=(8, 6)):
+def plot_cube(vertices, edges, title="Cube", figsize=(6, 6)):
     """Plots a cube or its 2D projection."""
     fig = plt.figure(figsize=figsize)
     if vertices.shape[1] == 2:
@@ -35,7 +35,7 @@ def plot_cube(vertices, edges, title="Cube", figsize=(8, 6)):
     plt.show()
 
 
-def plot_buckyball(vertices, edges, title="Buckyball", figsize=(8, 6)):
+def plot_buckyball(vertices, edges, title="Buckyball", figsize=(6, 6)):
     """Plots the buckyball structure in 3D or its 2D projection."""
     fig = plt.figure(figsize=figsize)
 
@@ -71,7 +71,7 @@ def plot_buckyball(vertices, edges, title="Buckyball", figsize=(8, 6)):
     plt.show()
 
 
-def plot_3d_model(vertices, faces, title="3D Model", figsize=(8, 6)):
+def plot_3d_model(vertices, faces, title="3D Model", figsize=(6, 6)):
     """Plots a 3D model using faces and vertices."""
     fig = plt.figure(figsize=figsize)
     ax = fig.add_subplot(111, projection='3d')
@@ -89,7 +89,7 @@ def plot_3d_model(vertices, faces, title="3D Model", figsize=(8, 6)):
     plt.show()
 
 
-def plot_3d_model_edges(vertices, faces, title="3D Model with Edges", figsize=(8, 6)):
+def plot_3d_model_edges(vertices, faces, title="3D Model with Edges", figsize=(6, 6)):
     """Plots a 3D model with edges using faces and vertices."""
     fig = plt.figure(figsize=figsize)
     ax = fig.add_subplot(111, projection='3d')
@@ -110,7 +110,7 @@ def plot_3d_model_edges(vertices, faces, title="3D Model with Edges", figsize=(8
     plt.show()
 
 
-def plot_2d_projection(vertices, faces, title="2D Projection of 3D Model", figsize=(8, 6)):
+def plot_2d_projection(vertices, faces, title="2D Projection of 3D Model", figsize=(6, 6)):
     """Plots a 2D projection of a 3D model."""
     fig, ax = plt.subplots(figsize=figsize)
     
