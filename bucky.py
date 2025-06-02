@@ -1,6 +1,4 @@
 import numpy as np
-import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
 
 def bucky():
     """
@@ -88,46 +86,3 @@ def bucky():
                 edges.append((i, j))
     
     return vertices, edges
-
-def plot_buckyball(vertices, edges):
-    """
-    Plot the buckyball in 3D.
-    """
-    fig = plt.figure(figsize=(10, 8))
-    ax = fig.add_subplot(111, projection='3d')
-    
-    # Plot vertices
-    ax.scatter(vertices[:, 0], vertices[:, 1], vertices[:, 2], color='black', s=50)
-    
-    # Plot edges
-    for edge in edges:
-        i, j = edge
-        ax.plot([vertices[i, 0], vertices[j, 0]],
-                [vertices[i, 1], vertices[j, 1]],
-                [vertices[i, 2], vertices[j, 2]], 'c-', linewidth=1)
-    
-    # Set equal aspect ratio
-    ax.set_box_aspect([1, 1, 1])
-    ax.set_xlabel('X')
-    ax.set_ylabel('Y')
-    ax.set_zlabel('Z')
-    ax.set_title('Buckminsterfullerene (C60) - Truncated Icosahedron')
-    
-    plt.tight_layout()
-    plt.show()
-    
-    return fig
-
-def main():
-    # Generate buckyball
-    vertices, edges = bucky()
-    
-    # Print some information
-    print(f"Number of vertices: {len(vertices)}")
-    print(f"Number of edges: {len(edges)}")
-    
-    # Plot
-    plot_buckyball(vertices, edges)
-
-if __name__ == "__main__":
-    main()

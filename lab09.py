@@ -3,9 +3,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 from rotation import rotation
 from bucky import bucky
+from scipy.spatial import ConvexHull
 
 def plot_cube(vertices, edges, title="Cube", figsize=(6, 6)):
-    """Plots a cube or its 2D projection."""
+    """Plots a 3D cube or its 2D projection."""
     fig = plt.figure(figsize=figsize)
     if vertices.shape[1] == 2:
         ax = fig.add_subplot(111)
@@ -33,7 +34,6 @@ def plot_cube(vertices, edges, title="Cube", figsize=(6, 6)):
         ax.set_box_aspect([1, 1, 1])
 
     plt.show()
-
 
 def plot_buckyball(vertices, edges, title="Buckyball", figsize=(6, 6)):
     """Plots the buckyball structure in 3D or its 2D projection."""
@@ -70,26 +70,7 @@ def plot_buckyball(vertices, edges, title="Buckyball", figsize=(6, 6)):
         
     plt.show()
 
-
-def plot_3d_model(vertices, faces, title="3D Model", figsize=(6, 6)):
-    """Plots a 3D model using faces and vertices."""
-    fig = plt.figure(figsize=figsize)
-    ax = fig.add_subplot(111, projection='3d')
-    
-    for face in faces:
-        tri = vertices[face]
-        ax.plot_trisurf(tri[:, 0], tri[:, 1], tri[:, 2], color='cyan', edgecolor='black', alpha=0.5)
-    
-    ax.set_title(title)
-    ax.set_xlabel('X')
-    ax.set_ylabel('Y')
-    ax.set_zlabel('Z')
-    ax.set_box_aspect([1, 1, 1])
-
-    plt.show()
-
-
-def plot_3d_model_edges(vertices, faces, title="3D Model with Edges", figsize=(6, 6)):
+def plot_3d_model(vertices, faces, title="3D Model with Edges", figsize=(6, 6)):
     """Plots a 3D model with edges using faces and vertices."""
     fig = plt.figure(figsize=figsize)
     ax = fig.add_subplot(111, projection='3d')
@@ -158,7 +139,7 @@ def main():
     Vert2Prj = Vert2Rot[:, [0, 1]]
     plot_buckyball(Vert2Prj, Edges2, title="2D Projection of Buckyball")
 
-    # Problem 3: Fawn (3D Model)
+    # Problem 3: Fawn
     v_mat = scipy.io.loadmat('v.mat')
     f_mat = scipy.io.loadmat('f.mat')
     v = v_mat['v']
@@ -168,8 +149,6 @@ def main():
     print(f"Number of faces (mFaces): {mFaces}, Number of vertices per face (nFaces): {nFaces}")
 
     plot_3d_model(v, f, title="3D Model of Fawn")
-    plot_3d_model_edges(v, f, title="3D Model with Edges of Fawn")
-
     vRot = v @ rotmat.T
     vRotPrj = vRot[:, [0, 1]]
     plot_2d_projection(vRotPrj, f, title="2D Projection of 3D Fawn")
@@ -180,6 +159,21 @@ def main():
     vPrj = vRot[:, [0, 1]]
     plot_2d_projection(vPrj, f, title="Alternative 2D Projection of 3D Fawn")
 
+    # Problem 4: Additional 3D Model - Convex Hull
+    np.random.seed(42)
+    points = np.random.rand(30, 3) * 10 - 5  # Random points in a cube [-5, 5]^3
+
+    hull = ConvexHull(points)
+    vertices = points
+    faces = hull.simplices
+
+    plot_3d_model(vertices, faces, title="Original Convex Hull")
+    rotmat = rotation(np.pi/6, np.pi/4, np.pi/3)
+    rotated_vertices = vertices @ rotmat.T
+    plot_3d_model(rotated_vertices, faces, title="Rotated Convex Hull")
+
+    projected_vertices = rotated_vertices[:, [0, 1]]
+    plot_2d_projection(projected_vertices, faces, title="2D Projection of 3D Convex Hull")
 
 if __name__ == "__main__":
     main()
