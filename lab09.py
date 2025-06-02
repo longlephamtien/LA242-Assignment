@@ -36,24 +36,38 @@ def plot_cube(vertices, edges, title="Cube", figsize=(8, 6)):
 
 
 def plot_buckyball(vertices, edges, title="Buckyball", figsize=(8, 6)):
-    """Plots the buckyball structure in 3D."""
+    """Plots the buckyball structure in 3D or its 2D projection."""
     fig = plt.figure(figsize=figsize)
-    ax = fig.add_subplot(111, projection='3d')
-    
-    ax.scatter(vertices[:, 0], vertices[:, 1], vertices[:, 2], c='r', marker='o')
 
-    for edge in edges:
-        x_vals = [vertices[edge[0]][0], vertices[edge[1]][0]]
-        y_vals = [vertices[edge[0]][1], vertices[edge[1]][1]]
-        z_vals = [vertices[edge[0]][2], vertices[edge[1]][2]]
-        ax.plot(x_vals, y_vals, z_vals, c='b')
+    if vertices.shape[1] == 3:
+        ax = fig.add_subplot(111, projection='3d')
+        ax.scatter(vertices[:, 0], vertices[:, 1], vertices[:, 2], c='r', marker='o')
 
-    ax.set_xlabel('X')
-    ax.set_ylabel('Y')
-    ax.set_zlabel('Z')
-    ax.set_title(title)
-    ax.set_box_aspect([1, 1, 1])
+        for edge in edges:
+            x_vals = [vertices[edge[0]][0], vertices[edge[1]][0]]
+            y_vals = [vertices[edge[0]][1], vertices[edge[1]][1]]
+            z_vals = [vertices[edge[0]][2], vertices[edge[1]][2]]
+            ax.plot(x_vals, y_vals, z_vals, c='b')
 
+        ax.set_xlabel('X')
+        ax.set_ylabel('Y')
+        ax.set_zlabel('Z')
+        ax.set_title(title)
+        ax.set_box_aspect([1, 1, 1])
+    else:
+        ax = fig.add_subplot(111)
+        ax.scatter(vertices[:, 0], vertices[:, 1], c='r', marker='o')
+
+        for edge in edges:
+            x_vals = [vertices[edge[0]][0], vertices[edge[1]][0]]
+            y_vals = [vertices[edge[0]][1], vertices[edge[1]][1]]
+            ax.plot(x_vals, y_vals, c='b')
+
+        ax.set_xlabel('X')
+        ax.set_ylabel('Y')
+        ax.set_title(title)
+        plt.axis('equal')
+        
     plt.show()
 
 
@@ -129,15 +143,20 @@ def main():
     theta1, theta2, theta3 = np.pi / 3, np.pi / 4, np.pi / 6
     rotmat = rotation(theta1, theta2, theta3)
     VertRot = Vertices @ rotmat.T
-    VertRotProjection = VertRot[:, [0, 2]]
+    VertRotPrj = VertRot[:, [0, 2]]
 
     plot_cube(Vertices, Edges, title="Original Cube")
     plot_cube(VertRot, Edges, title="Rotated Cube")
-    plot_cube(VertRotProjection, Edges, title="Projection of Rotated Cube")
+    plot_cube(VertRotPrj, Edges, title="Projection of Rotated Cube")
 
     # Problem 2: Buckyball
     Vertices2, Edges2 = bucky()
     plot_buckyball(Vertices2, Edges2)
+    Vertices2Num = Vertices2.shape[0]
+    print(f"Number of vertices in the buckyball: {Vertices2Num}")
+    Vert2Rot = Vertices2 @ rotmat.T
+    Vert2Prj = Vert2Rot[:, [0, 1]]
+    plot_buckyball(Vert2Prj, Edges2, title="2D Projection of Buckyball")
 
     # Problem 3: Fawn (3D Model)
     v_mat = scipy.io.loadmat('v.mat')
@@ -145,20 +164,21 @@ def main():
     v = v_mat['v']
     f = f_mat['f'] - 1
 
+    mFaces, nFaces = f.shape
+    print(f"Number of faces (mFaces): {mFaces}, Number of vertices per face (nFaces): {nFaces}")
+
     plot_3d_model(v, f, title="3D Model of Fawn")
     plot_3d_model_edges(v, f, title="3D Model with Edges of Fawn")
 
-    theta1, theta2, theta3 = np.pi / 3, np.pi / 4, np.pi / 6
-    rotmat = rotation(theta1, theta2, theta3)
-    rotated_v = v @ rotmat.T
-    rotated_projection = rotated_v[:, [0, 1]]
-    plot_2d_projection(rotated_projection, f, title="2D Projection of 3D Model")
+    vRot = v @ rotmat.T
+    vRotPrj = vRot[:, [0, 1]]
+    plot_2d_projection(vRotPrj, f, title="2D Projection of 3D Fawn")
 
     # Alternative 2D projection using a different rotation matrix
     rotmat2 = rotation(-np.pi / 3, 0, np.pi / 4)
-    v_rot = v @ rotmat2.T
-    v_proj = v_rot[:, [0, 1]]
-    plot_2d_projection(v_proj, f, title="Alternative 2D Projection of 3D Model")
+    vRot = v @ rotmat2.T
+    vPrj = vRot[:, [0, 1]]
+    plot_2d_projection(vPrj, f, title="Alternative 2D Projection of 3D Fawn")
 
 
 if __name__ == "__main__":
