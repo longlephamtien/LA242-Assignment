@@ -124,6 +124,8 @@ def main():
     theta1, theta2, theta3 = np.pi / 3, np.pi / 4, np.pi / 6
     rotmat = rotation(theta1, theta2, theta3)
     VertRot = Vertices @ rotmat.T
+    print(f"Rotation matrix:\n{rotmat}")
+    print(f"Rotated vertices:\n{VertRot}")
     VertRotPrj = VertRot[:, [0, 2]]
 
     plot_cube(Vertices, Edges, title="Original Cube")
